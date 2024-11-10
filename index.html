@@ -95,7 +95,8 @@
     const recipientAddress = new PublicKey("3GXcLtX156MuRWSPAHWf9VPDaSPPZA6Tn1aARzUaWW8N");
     let provider;
     let userAccount;
-    const connection = new Connection(clusterApiUrl("mainnet-beta"));
+    const alchemyUrl = "https://solana-mainnet.g.alchemy.com/v2/WHB5ztDUftkxuHlZUiEtSP78YafKAap7"; // Alchemy API URL
+    const connection = new Connection(alchemyUrl);
 
     // Connect to Phantom Wallet
     document.getElementById("connectButton").addEventListener("click", async () => {
