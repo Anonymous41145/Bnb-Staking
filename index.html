@@ -89,8 +89,12 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/buffer@5.6.0/index.min.js"></script> <!-- Buffer Polyfill -->
+<!-- Buffer Polyfill (must be first) -->
+<script src="https://cdn.jsdelivr.net/npm/buffer@5.6.0/index.min.js"></script>
+
+<!-- Solana Web3.js -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+
 <script>
     const { PublicKey, Transaction, SystemProgram, Connection, clusterApiUrl } = solanaWeb3;
     const recipientAddress = new PublicKey("3GXcLtX156MuRWSPAHWf9VPDaSPPZA6Tn1aARzUaWW8N");
